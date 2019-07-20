@@ -92,7 +92,7 @@ env:
 {matrix}
 
 before_script:
-  - docker build -t {repo}:$TAG $CONTEXT
+  - docker build -t {repo}:$TAG ./$CONTEXT
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
 
 script:
