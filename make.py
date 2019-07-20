@@ -75,7 +75,7 @@ matrix = reduce(
 travis_template = lambda matrix, repo='kudato/baseimage': \
 f'''sudo: required
 language: python
-python: 3.7
+python: 3.6
 
 services:
   - docker
