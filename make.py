@@ -86,29 +86,29 @@ cache:
   directories:
   - .build
 
-install:
+env:
+  - TESTING=True
+{matrix}
 
 jobs:
   include:
-    - stage: test
+    - stage: Tests
+      env: TESTING=True
       script:
         - pip install pyyaml
         - python -m unittest discover tests
         - ./make.py
-    - stage: build
-      env:
-{matrix}
+    - stage: Build
+      script:
+      - echo $TRAVIS_COMMIT
+      - docker build -t {repo}:$TAG ./$CONTEXT
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
 
-
-before_script:
-  - echo $TRAVIS_COMMIT
-  - docker build -t {repo}:$TAG ./$CONTEXT
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
-
-script:
-  - docker push {repo}:$TAG
-  - docker tag {repo}:$TAG-$COMMIT_SHA
-  - docker push {repo}:$TAG-$COMMIT_SHA
+    - deploy:
+      script:
+        - docker push {repo}:$TAG
+        - docker tag {repo}:$TAG-$TRAVIS_COMMIT
+        - docker push {repo}:$TAG-$TRAVIS_COMMIT
 '''
 
 
@@ -116,7 +116,7 @@ class Travis(File):
     def __init__(self):
         super().__init__('.travis.yml')
         body = '\n'.join(
-            [f'        - CONTEXT={i[2]} TAG={i[0]}' for i in matrix]
+            [f'  - CONTEXT={i[2]} TAG={i[0]}' for i in matrix]
         )
         self.body = travis_template(body)
 

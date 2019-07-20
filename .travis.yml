@@ -11,44 +11,44 @@ cache:
   directories:
   - .build
 
-install:
+env:
+  - TESTING=True
+  - CONTEXT=.build/latest.tar.gz TAG=latest
+  - CONTEXT=.build/alpine3.9.tar.gz TAG=alpine3.9
+  - CONTEXT=.build/python.tar.gz TAG=python
+  - CONTEXT=.build/python-3.7.tar.gz TAG=python-3.7
+  - CONTEXT=.build/python-3.7-alpine3.9.tar.gz TAG=python-3.7-alpine3.9
+  - CONTEXT=.build/python-3.6.tar.gz TAG=python-3.6
+  - CONTEXT=.build/python-3.6-alpine3.9.tar.gz TAG=python-3.6-alpine3.9
+  - CONTEXT=.build/php-cli.tar.gz TAG=php-cli
+  - CONTEXT=.build/php-cli-7.3.tar.gz TAG=php-cli-7.3
+  - CONTEXT=.build/php-cli-7.3-alpine3.9.tar.gz TAG=php-cli-7.3-alpine3.9
+  - CONTEXT=.build/php-fpm.tar.gz TAG=php-fpm
+  - CONTEXT=.build/php-fpm-7.3.tar.gz TAG=php-fpm-7.3
+  - CONTEXT=.build/php-fpm-7.3-alpine3.9.tar.gz TAG=php-fpm-7.3-alpine3.9
+  - CONTEXT=.build/node-6.17.tar.gz TAG=node-6.17
+  - CONTEXT=.build/node-6.17-alpine3.9.tar.gz TAG=node-6.17-alpine3.9
+  - CONTEXT=.build/node-8.16.tar.gz TAG=node-8.16
+  - CONTEXT=.build/node-8.16-alpine3.9.tar.gz TAG=node-8.16-alpine3.9
+  - CONTEXT=.build/docker-18.09.tar.gz TAG=docker-18.09
+  - CONTEXT=.build/docker-18.09-alpine3.9.tar.gz TAG=docker-18.09-alpine3.9
 
 jobs:
   include:
-    - stage: test
+    - stage: Tests
+      env: TESTING=True
       script:
         - pip install pyyaml
         - python -m unittest discover tests
         - ./make.py
-    - stage: build
-      env:
-        - CONTEXT=.build/latest.tar.gz TAG=latest
-        - CONTEXT=.build/alpine3.9.tar.gz TAG=alpine3.9
-        - CONTEXT=.build/python.tar.gz TAG=python
-        - CONTEXT=.build/python-3.7.tar.gz TAG=python-3.7
-        - CONTEXT=.build/python-3.7-alpine3.9.tar.gz TAG=python-3.7-alpine3.9
-        - CONTEXT=.build/python-3.6.tar.gz TAG=python-3.6
-        - CONTEXT=.build/python-3.6-alpine3.9.tar.gz TAG=python-3.6-alpine3.9
-        - CONTEXT=.build/php-cli.tar.gz TAG=php-cli
-        - CONTEXT=.build/php-cli-7.3.tar.gz TAG=php-cli-7.3
-        - CONTEXT=.build/php-cli-7.3-alpine3.9.tar.gz TAG=php-cli-7.3-alpine3.9
-        - CONTEXT=.build/php-fpm.tar.gz TAG=php-fpm
-        - CONTEXT=.build/php-fpm-7.3.tar.gz TAG=php-fpm-7.3
-        - CONTEXT=.build/php-fpm-7.3-alpine3.9.tar.gz TAG=php-fpm-7.3-alpine3.9
-        - CONTEXT=.build/node-6.17.tar.gz TAG=node-6.17
-        - CONTEXT=.build/node-6.17-alpine3.9.tar.gz TAG=node-6.17-alpine3.9
-        - CONTEXT=.build/node-8.16.tar.gz TAG=node-8.16
-        - CONTEXT=.build/node-8.16-alpine3.9.tar.gz TAG=node-8.16-alpine3.9
-        - CONTEXT=.build/docker-18.09.tar.gz TAG=docker-18.09
-        - CONTEXT=.build/docker-18.09-alpine3.9.tar.gz TAG=docker-18.09-alpine3.9
+    - stage: Build
+      script:
+      - echo $TRAVIS_COMMIT
+      - docker build -t kudato/baseimage:$TAG ./$CONTEXT
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
 
-
-before_script:
-  - echo $TRAVIS_COMMIT
-  - docker build -t kudato/baseimage:$TAG ./$CONTEXT
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
-
-script:
-  - docker push kudato/baseimage:$TAG
-  - docker tag kudato/baseimage:$TAG-$COMMIT_SHA
-  - docker push kudato/baseimage:$TAG-$COMMIT_SHA
+    - deploy:
+      script:
+        - docker push kudato/baseimage:$TAG
+        - docker tag kudato/baseimage:$TAG-$TRAVIS_COMMIT
+        - docker push kudato/baseimage:$TAG-$TRAVIS_COMMIT
