@@ -34,7 +34,7 @@ env:
 
 script:
   - echo $TRAVIS_COMMIT
-  - docker build -t kudato/baseimage:$TAG ./$CONTEXT
+  - docker build -t kudato/baseimage:$TAG - < $CONTEXT
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
   - docker push kudato/baseimage:$TAG
   - docker tag kudato/baseimage:$TAG-$TRAVIS_COMMIT

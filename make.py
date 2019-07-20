@@ -91,7 +91,7 @@ env:
 
 script:
   - echo $TRAVIS_COMMIT
-  - docker build -t {repo}:$TAG ./$CONTEXT
+  - docker build -t {repo}:$TAG - < $CONTEXT
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
   - docker push {repo}:$TAG
   - docker tag {repo}:$TAG-$TRAVIS_COMMIT
