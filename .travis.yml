@@ -39,6 +39,6 @@ install:
 script:
   - docker build -t kudato/baseimage:$TAG - < $CONTEXT
   - docker tag kudato/baseimage:$TAG kudato/baseimage:$TAG-$COMMIT
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
+  - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
   - docker push kudato/baseimage:$TAG
   - docker push kudato/baseimage:$TAG-$COMMIT
