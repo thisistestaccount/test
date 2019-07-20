@@ -6,10 +6,15 @@ python:
 services:
   - docker
 
-before_install:
+cache: pip
+cache:
+  directories:
+  - .build
+
+install:
   - pip install pyyaml
   - python -m unittest discover tests
-  - python make.py
+  - ./make.py
 
 env:
   global:
