@@ -90,7 +90,7 @@ env:
 {matrix}
 
 script:
-  - echo $TRAVIS_COMMIT
+  - echo "$TRAVIS_COMMIT:0:7"
   - docker build -t {repo}:$TAG - < $CONTEXT
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
   - docker push {repo}:$TAG

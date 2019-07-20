@@ -33,7 +33,7 @@ env:
   - CONTEXT=.build/docker-18.09-alpine3.9.tar.gz TAG=docker-18.09-alpine3.9
 
 script:
-  - echo $TRAVIS_COMMIT
+  - echo "$TRAVIS_COMMIT:0:7"
   - docker build -t kudato/baseimage:$TAG - < $CONTEXT
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
   - docker push kudato/baseimage:$TAG
