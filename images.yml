@@ -1,0 +1,52 @@
+images:
+  alpine:
+    dockerfile: Dockerfile
+    source: alpine:3.9
+    tags:
+    - latest
+    - alpine3.9
+
+  python-3.7:
+    source: python:3.7-alpine3.9
+    tags:
+    - python
+    - python-3.7
+    - python-3.7-alpine3.9
+
+  python-3.6:
+    source: python:3.6-alpine3.9
+    tags:
+    - python-3.6
+    - python-3.6-alpine3.9
+
+  php-cli-7.3:
+    source: php:7.3-cli-alpine3.9
+    tags:
+    - php-cli
+    - php-cli-7.3
+    - php-cli-7.3-alpine3.9
+
+  php-fpm-7.3:
+    source: php:7.3-fpm-alpine3.9
+    tags:
+    - php-fpm
+    - php-fpm-7.3
+    - php-fpm-7.3-alpine3.9
+
+  node-6.17:
+    source: node:6.17-alpine
+    tags:
+    - node-6.17
+    - node-6.17-alpine3.9
+
+  node-8.16:
+    source: node:8.16-alpine
+    tags:
+    - node-8.16
+    - node-8.16-alpine3.9
+
+  docker-18.09:
+    source: docker:18.09
+    tags:
+    - docker-18.09
+    - docker-18.09-alpine3.9
