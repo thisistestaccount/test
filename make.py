@@ -95,7 +95,7 @@ env:
 
 script:
   - docker build -t {repo}:$TAG - < $CONTEXT
-  - docker tag {repo}:$TAG-$COMMIT
+  - docker tag {repo}:$TAG {repo}:$TAG-$COMMIT
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
   - docker push {repo}:$TAG
   - docker push {repo}:$TAG-$COMMIT
