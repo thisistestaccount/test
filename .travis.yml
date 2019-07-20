@@ -1,12 +1,14 @@
 sudo: required
-language: python3
+language: python
+python: 3.7
+
 services:
   - docker
 
 before_install:
-  - pip3 install pyyaml
-  - python3 -m unittest discover tests
-  - python3 make.py
+  - pip install pyyaml
+  - python -m unittest discover tests
+  - python make.py
 
 env:
   global:
