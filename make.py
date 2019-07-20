@@ -97,14 +97,11 @@ jobs:
         - ./make.py
     - stage: build
       env:
-        global:
-          - COMMIT_SHA=$TRAVIS_COMMIT
-        matrix:
 {matrix}
 
 
 before_script:
-  - ls -s ./
+  - echo $TRAVIS_COMMIT
   - docker build -t {repo}:$TAG ./$CONTEXT
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
 
@@ -119,7 +116,7 @@ class Travis(File):
     def __init__(self):
         super().__init__('.travis.yml')
         body = '\n'.join(
-            [f'          - CONTEXT={i[2]} TAG={i[0]}' for i in matrix]
+            [f'        - CONTEXT={i[2]} TAG={i[0]}' for i in matrix]
         )
         self.body = travis_template(body)
 
