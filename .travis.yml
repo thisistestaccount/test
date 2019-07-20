@@ -1,6 +1,6 @@
 sudo: required
 language: python
-python: 3.7
+python: 3.6
 
 services:
   - docker
@@ -35,7 +35,7 @@ env:
     - CONTEXT=.build/docker-18.09-alpine3.9.tar.gz TAG=docker-18.09-alpine3.9
 
 before_script:
-  - docker build -t kudato/baseimage:$TAG $CONTEXT
+  - docker build -t kudato/baseimage:$TAG ./$CONTEXT
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
 
 script:
