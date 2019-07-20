@@ -87,16 +87,18 @@ install:
   - ./make.py
 
 env:
+  global:
+    - COMMIT=$(echo $TRAVIS_COMMIT | grep -o '^...')
+  matrix:
 {matrix}
 
+
 script:
-  - echo "$TRAVIS_COMMIT:0:7"
   - docker build -t {repo}:$TAG - < $CONTEXT
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
   - docker push {repo}:$TAG
-  - docker tag {repo}:$TAG-$TRAVIS_COMMIT
-  - docker push {repo}:$TAG-$TRAVIS_COMMIT
-
+  - docker tag {repo}:$TAG-$COMMIT
+  - docker push {repo}:$TAG-$COMMIT
 '''
 
 
@@ -104,7 +106,7 @@ class Travis(File):
     def __init__(self):
         super().__init__('.travis.yml')
         body = '\n'.join(
-            [f'  - CONTEXT={i[2]} TAG={i[0]}' for i in matrix]
+            [f'    - CONTEXT={i[2]} TAG={i[0]}' for i in matrix]
         )
         self.body = travis_template(body)
 
