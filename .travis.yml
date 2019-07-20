@@ -11,7 +11,6 @@ install:
   - python -m unittest discover tests
   - ./make.py
 
-
 env:
   - CONTEXT=.build/latest.tar.gz TAG=latest
   - CONTEXT=.build/alpine3.9.tar.gz TAG=alpine3.9
@@ -33,15 +32,11 @@ env:
   - CONTEXT=.build/docker-18.09.tar.gz TAG=docker-18.09
   - CONTEXT=.build/docker-18.09-alpine3.9.tar.gz TAG=docker-18.09-alpine3.9
 
-before_script:
+script:
+  - echo $TRAVIS_COMMIT
+  - docker build -t kudato/baseimage:$TAG ./$CONTEXT
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
+  - docker push kudato/baseimage:$TAG
+  - docker tag kudato/baseimage:$TAG-$TRAVIS_COMMIT
+  - docker push kudato/baseimage:$TAG-$TRAVIS_COMMIT
 
-jobs:
-  include:
-    - deploy:
-      script:
-        - echo $TRAVIS_COMMIT
-        - docker build -t kudato/baseimage:$TAG ./$CONTEXT
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
-        - docker push kudato/baseimage:$TAG
-        - docker tag kudato/baseimage:$TAG-$TRAVIS_COMMIT
-        - docker push kudato/baseimage:$TAG-$TRAVIS_COMMIT

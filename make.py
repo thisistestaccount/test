@@ -86,22 +86,17 @@ install:
   - python -m unittest discover tests
   - ./make.py
 
-
 env:
 {matrix}
 
-before_script:
+script:
+  - echo $TRAVIS_COMMIT
+  - docker build -t {repo}:$TAG ./$CONTEXT
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
+  - docker push {repo}:$TAG
+  - docker tag {repo}:$TAG-$TRAVIS_COMMIT
+  - docker push {repo}:$TAG-$TRAVIS_COMMIT
 
-jobs:
-  include:
-    - deploy:
-      script:
-        - echo $TRAVIS_COMMIT
-        - docker build -t {repo}:$TAG ./$CONTEXT
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
-        - docker push {repo}:$TAG
-        - docker tag {repo}:$TAG-$TRAVIS_COMMIT
-        - docker push {repo}:$TAG-$TRAVIS_COMMIT
 '''
 
 
