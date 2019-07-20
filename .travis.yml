@@ -4,13 +4,9 @@ language: python
 python: 3.7
 services:
   - docker
-
-install:
-  - echo $TRAVIS_COMMIT
-  - pip install pyyaml
-  - python -m unittest discover tests
-  - ./make.py
-
+branches:
+  only:
+  - master
 env:
   global:
     - COMMIT=$(echo $TRAVIS_COMMIT | grep -o '^...')
@@ -34,7 +30,11 @@ env:
     - CONTEXT=.build/node-8.16-alpine3.9.tar.gz TAG=node-8.16-alpine3.9
     - CONTEXT=.build/docker-18.09.tar.gz TAG=docker-18.09
     - CONTEXT=.build/docker-18.09-alpine3.9.tar.gz TAG=docker-18.09-alpine3.9
-
+install:
+  - echo $COMMIT
+  - pip install pyyaml &>/dev/null
+  - python -m unittest discover tests
+  - ./make.py
 
 script:
   - docker build -t kudato/baseimage:$TAG - < $CONTEXT

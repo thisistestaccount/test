@@ -79,19 +79,19 @@ language: python
 python: 3.7
 services:
   - docker
-
-install:
-  - echo $TRAVIS_COMMIT
-  - pip install pyyaml
-  - python -m unittest discover tests
-  - ./make.py
-
+branches:
+  only:
+  - master
 env:
   global:
     - COMMIT=$(echo $TRAVIS_COMMIT | grep -o '^...')
   matrix:
 {matrix}
-
+install:
+  - echo $COMMIT
+  - pip install pyyaml &>/dev/null
+  - python -m unittest discover tests
+  - ./make.py
 
 script:
   - docker build -t {repo}:$TAG - < $CONTEXT
