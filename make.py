@@ -80,18 +80,17 @@ python: 3.7
 services:
   - docker
 
+install:
+  - pip install pyyaml
+  - python -m unittest discover tests
+  - ./make.py
+
+
 env:
-  - TESTING=True
 {matrix}
 
 jobs:
   include:
-    - stage: Tests
-      env: TESTING=True
-      script:
-        - pip install pyyaml
-        - python -m unittest discover tests
-        - ./make.py
     - stage: Build
       script:
       - echo $TRAVIS_COMMIT

@@ -5,8 +5,13 @@ python: 3.7
 services:
   - docker
 
+install:
+  - pip install pyyaml
+  - python -m unittest discover tests
+  - ./make.py
+
+
 env:
-  - TESTING=True
   - CONTEXT=.build/latest.tar.gz TAG=latest
   - CONTEXT=.build/alpine3.9.tar.gz TAG=alpine3.9
   - CONTEXT=.build/python.tar.gz TAG=python
@@ -29,12 +34,6 @@ env:
 
 jobs:
   include:
-    - stage: Tests
-      env: TESTING=True
-      script:
-        - pip install pyyaml
-        - python -m unittest discover tests
-        - ./make.py
     - stage: Build
       script:
       - echo $TRAVIS_COMMIT
