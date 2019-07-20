@@ -47,6 +47,7 @@ jobs:
 
 
 before_script:
+  - ls -s ./
   - docker build -t kudato/baseimage:$TAG ./$CONTEXT
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &>/dev/null
 
