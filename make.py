@@ -96,7 +96,7 @@ install:
 script:
   - docker build -t {repo}:$TAG - < $CONTEXT
   - docker tag {repo}:$TAG {repo}:$TAG-$COMMIT
-  - echo "$(echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin)"
+  - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
   - docker push {repo}:$TAG
   - docker push {repo}:$TAG-$COMMIT
 '''
